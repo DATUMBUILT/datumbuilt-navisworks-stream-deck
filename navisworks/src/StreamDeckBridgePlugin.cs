@@ -100,8 +100,6 @@ namespace VC.Navisworks2027Starter
 
         private static string ExecuteRequest(string request)
         {
-            if (!string.Equals(request, "TOGGLE_CLASH_HIDE_OTHER", StringComparison.Ordinal))
-                return "ERROR:UNKNOWN_REQUEST";
             if (navisworksDispatcher == null)
                 return "ERROR:NO_UI_CONTEXT";
 
@@ -113,9 +111,10 @@ namespace VC.Navisworks2027Starter
                     try
                     {
                         string error;
-                        response = HelloNavisworksPlugin.TryToggleClashHideOther(out error)
-                            ? "OK"
-                            : "ERROR:" + error;
+                        bool succeeded = string.Equals(request, "TOGGLE_CLASH_HIDE_OTHER", StringComparison.Ordinal)
+                            ? HelloNavisworksPlugin.TryToggleClashHideOther(out error)
+                            : NavisworksCommandExecutor.TryExecute(request, out error);
+                        response = succeeded ? "OK" : "ERROR:" + error;
                     }
                     catch (Exception exception)
                     {

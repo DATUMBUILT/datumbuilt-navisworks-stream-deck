@@ -32,6 +32,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -41,7 +42,14 @@
       <HintPath>$(NavisworksInstallDir)\navisworks.gui.roamer.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Autodesk.Navisworks.Api">
+    <Reference Include="navisworks.gui.generic">
+      <HintPath>$(NavisworksInstallDir)\navisworks.gui.generic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="navisworks.gui.interface">
+      <HintPath>$(NavisworksInstallDir)\navisworks.gui.interface.dll</HintPath>
+      <Private>False</Private>
+    </Reference>    <Reference Include="Autodesk.Navisworks.Api">
       <HintPath>$(NavisworksInstallDir)\Autodesk.Navisworks.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -52,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HelloNavisworksPlugin.cs" />
+    <Compile Include="NavisworksCommandExecutor.cs" />
     <Compile Include="StreamDeckBridgePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

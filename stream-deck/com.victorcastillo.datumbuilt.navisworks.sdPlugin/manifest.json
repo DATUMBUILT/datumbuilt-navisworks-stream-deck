@@ -12,18 +12,324 @@
           "Image": "imgs/navisworks-toggle-hide-other",
           "Title": "Hide Other",
           "TitleAlignment": "bottom",
-          "FontSize": 12
+          "FontSize": 11
         }
       ],
-      "Tooltip": "Run DATUMBUILT Toggle Clash Hide Other in Navisworks Manage 2027.",
+      "Tooltip": "Toggle Clash Detective Hide Other.",
       "UUID": "com.victorcastillo.datumbuilt.navisworks.toggle-clash-hide-other"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/select-window",
+      "Name": "Select / Window",
+      "States": [
+        {
+          "Image": "imgs/actions/select-window",
+          "Title": "Select /\nWindow",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Select Objects. Hold: Crossing/Window Select.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.select-window"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/item-move-reset",
+      "Name": "Item Move / Reset",
+      "States": [
+        {
+          "Image": "imgs/actions/item-move-reset",
+          "Title": "Item Move\n/ Reset",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Item Move. Hold: Reset selected transforms.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.item-move-reset"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/draw-erase",
+      "Name": "Draw / Erase",
+      "States": [
+        {
+          "Image": "imgs/actions/draw-erase",
+          "Title": "Draw /\nErase",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Freehand markup at thickness 6. Hold: Erase markup.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.draw-erase"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/measure-clear",
+      "Name": "Measure / Clear",
+      "States": [
+        {
+          "Image": "imgs/actions/measure-clear",
+          "Title": "Measure\n/ Clear",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Point-to-point measure. Hold: Clear measurements.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.measure-clear"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/appearance-profile-reset",
+      "Name": "Apply A.P. / Reset",
+      "States": [
+        {
+          "Image": "imgs/actions/appearance-profile-reset",
+          "Title": "Apply A.P.\n/ Reset",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Apply selected Appearance Profile. Hold: Reset all appearances.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.appearance-profile-reset"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/black-arrow",
+      "Name": "Black Arrow",
+      "States": [
+        {
+          "Image": "imgs/actions/black-arrow",
+          "Title": "Black\nArrow",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Black arrow markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.black-arrow"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/line-string",
+      "Name": "Line / String",
+      "States": [
+        {
+          "Image": "imgs/actions/line-string",
+          "Title": "Line /\nString",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Line markup. Hold: Line String markup. Thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.line-string"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/ellipse-cloud",
+      "Name": "Ellipse / Cloud",
+      "States": [
+        {
+          "Image": "imgs/actions/ellipse-cloud",
+          "Title": "Ellipse\n/ Cloud",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Short press: Ellipse markup. Hold: Cloud markup. Thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.ellipse-cloud"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/clash-detective",
+      "Name": "Clash Detective",
+      "States": [
+        {
+          "Image": "imgs/actions/clash-detective",
+          "Title": "Clash\nDetective",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Open or activate Clash Detective.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.clash-detective"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/red-cloud",
+      "Name": "Red Cloud",
+      "States": [
+        {
+          "Image": "imgs/actions/red-cloud",
+          "Title": "Red Cloud",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Red cloud markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.red-cloud"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/red-ellipse",
+      "Name": "Red Ellipse",
+      "States": [
+        {
+          "Image": "imgs/actions/red-ellipse",
+          "Title": "Red Ellipse",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Red ellipse markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.red-ellipse"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/red-string",
+      "Name": "Red String",
+      "States": [
+        {
+          "Image": "imgs/actions/red-string",
+          "Title": "Red String",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Red line-string markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.red-string"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/red-line",
+      "Name": "Red Line",
+      "States": [
+        {
+          "Image": "imgs/actions/red-line",
+          "Title": "Red Line",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Red line markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.red-line"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/eraser",
+      "Name": "Eraser",
+      "States": [
+        {
+          "Image": "imgs/actions/eraser",
+          "Title": "Eraser",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Erase markup.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.eraser"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/blue-cloud",
+      "Name": "Blue Cloud",
+      "States": [
+        {
+          "Image": "imgs/actions/blue-cloud",
+          "Title": "Blue Cloud",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Blue cloud markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.blue-cloud"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/blue-ellipse",
+      "Name": "Blue Ellipse",
+      "States": [
+        {
+          "Image": "imgs/actions/blue-ellipse",
+          "Title": "Blue Ellipse",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Blue ellipse markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.blue-ellipse"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/blue-string",
+      "Name": "Blue String",
+      "States": [
+        {
+          "Image": "imgs/actions/blue-string",
+          "Title": "Blue String",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Blue line-string markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.blue-string"
+    },
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/actions/blue-line",
+      "Name": "Blue Line",
+      "States": [
+        {
+          "Image": "imgs/actions/blue-line",
+          "Title": "Blue Line",
+          "TitleAlignment": "bottom",
+          "FontSize": 11
+        }
+      ],
+      "Tooltip": "Blue line markup at thickness 6.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.blue-line"
     }
   ],
   "Author": "Victor Castillo",
   "Category": "DATUMBUILT Navisworks",
   "CategoryIcon": "imgs/datumbuilt-category",
   "CodePath": "bin/plugin.js",
-  "Description": "DATUMBUILT workflow actions, including Navisworks Clash Hide Other control.",
+  "Description": "Direct Navisworks Manage 2027 workflow actions through the DATUMBUILT in-process bridge.",
   "Icon": "imgs/datumbuilt-plugin",
   "Name": "DATUMBUILT Navisworks",
   "Nodejs": {
@@ -33,10 +339,6 @@
     {
       "Platform": "windows",
       "MinimumVersion": "10"
-    },
-    {
-      "Platform": "mac",
-      "MinimumVersion": "13"
     }
   ],
   "SDKVersion": 2,
@@ -44,5 +346,5 @@
     "MinimumVersion": "7.1"
   },
   "UUID": "com.victorcastillo.datumbuilt.navisworks",
-  "Version": "2.0.2.0"
+  "Version": "3.0.0.0"
 }
