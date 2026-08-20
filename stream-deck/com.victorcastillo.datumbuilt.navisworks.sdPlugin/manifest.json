@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "Actions": [
+    {
+      "Controllers": [
+        "Keypad"
+      ],
+      "Icon": "imgs/navisworks-toggle-hide-other",
+      "Name": "Toggle Clash Hide Other",
+      "States": [
+        {
+          "Image": "imgs/navisworks-toggle-hide-other",
+          "Title": "Hide Other",
+          "TitleAlignment": "bottom",
+          "FontSize": 12
+        }
+      ],
+      "Tooltip": "Run DATUMBUILT Toggle Clash Hide Other in Navisworks Manage 2027.",
+      "UUID": "com.victorcastillo.datumbuilt.navisworks.toggle-clash-hide-other"
+    }
+  ],
+  "Author": "Victor Castillo",
+  "Category": "DATUMBUILT Navisworks",
+  "CategoryIcon": "imgs/datumbuilt-category",
+  "CodePath": "bin/plugin.js",
+  "Description": "DATUMBUILT workflow actions, including Navisworks Clash Hide Other control.",
+  "Icon": "imgs/datumbuilt-plugin",
+  "Name": "DATUMBUILT Navisworks",
+  "Nodejs": {
+    "Version": "20"
+  },
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    },
+    {
+      "Platform": "mac",
+      "MinimumVersion": "13"
+    }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "7.1"
+  },
+  "UUID": "com.victorcastillo.datumbuilt.navisworks",
+  "Version": "2.0.2.0"
+}

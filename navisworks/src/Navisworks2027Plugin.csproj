@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{6E66CC13-207E-48C0-A6EF-C87AB0566C34}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>VC.Navisworks2027Starter</RootNamespace>
+    <AssemblyName>VC.Navisworks2027Starter</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NavisworksInstallDir Condition=" '$(NavisworksInstallDir)' == '' ">C:\Program Files\Autodesk\Navisworks Manage 2027</NavisworksInstallDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdWindows">
+      <HintPath>$(NavisworksInstallDir)\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="navisworks.gui.roamer">
+      <HintPath>$(NavisworksInstallDir)\navisworks.gui.roamer.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Autodesk.Navisworks.Api">
+      <HintPath>$(NavisworksInstallDir)\Autodesk.Navisworks.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Autodesk.Navisworks.Clash">
+      <HintPath>$(NavisworksInstallDir)\Autodesk.Navisworks.Clash.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HelloNavisworksPlugin.cs" />
+    <Compile Include="StreamDeckBridgePlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DATUMBUILT.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="CheckNavisworksApi" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(NavisworksInstallDir)\Autodesk.Navisworks.Api.dll')" Text="Navisworks 2027 API not found at '$(NavisworksInstallDir)'. Set NavisworksInstallDir to the Navisworks Manage 2027 installation folder." />
+    <Error Condition="!Exists('$(NavisworksInstallDir)\Autodesk.Navisworks.Clash.dll')" Text="Navisworks 2027 Clash API not found at '$(NavisworksInstallDir)'. Confirm Navisworks Manage 2027 is installed." />
+    <Error Condition="!Exists('$(NavisworksInstallDir)\AdWindows.dll')" Text="Navisworks ribbon API not found at '$(NavisworksInstallDir)'. Confirm Navisworks Manage 2027 is installed." />
+  </Target>
+</Project>

@@ -1,0 +1,25 @@
+{
+  "name": "datumbuilt-stream-deck-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "validate": "streamdeck validate com.victorcastillo.datumbuilt.navisworks.sdPlugin",
+    "pack": "streamdeck pack com.victorcastillo.datumbuilt.navisworks.sdPlugin"
+  },
+  "dependencies": {
+    "@elgato/streamdeck": "^2.0.0"
+  },
+  "devDependencies": {
+    "@elgato/cli": "latest",
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "latest",
+    "@types/node": "latest",
+    "rollup": "latest",
+    "tslib": "latest",
+    "typescript": "~5.9.3"
+  }
+}

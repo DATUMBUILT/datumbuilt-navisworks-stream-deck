@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationPackage SchemaVersion="1.0"
+                    AutodeskProduct="Navisworks"
+                    Name="▲ DATUMBUILT Clash Tools"
+                    Description="Clash Detective Hide Other toggle for Navisworks Manage 2027"
+                    AppVersion="1.2.1"
+                    ProductCode="{8F592C27-A4B8-42E4-BA59-9604F9574227}">
+  <CompanyDetails Name="DATUMBUILT" />
+  <Components Description="Navisworks Manage 2027 component">
+    <RuntimeRequirements OS="Win64" Platform="NAVMAN" SeriesMin="Nw24" SeriesMax="Nw24" />
+    <ComponentEntry AppName="▲ DATUMBUILT Clash Tools"
+                    AppType="ManagedPlugin"
+                    ModuleName="./Contents/v24/VC.Navisworks2027Starter.dll" />
+  </Components>
+</ApplicationPackage>
