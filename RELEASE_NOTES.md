@@ -2,14 +2,20 @@
 
 ## Included
 
-- ▲ DATUMBUILT Clash Tools for Navisworks Manage 2027 — 1.2.1
-- DATUMBUILT Navisworks for Stream Deck — 2.0.2.0
+- ▲ DATUMBUILT Navisworks Tools for Navisworks Manage 2027 — 1.3.2
+- DATUMBUILT Navisworks for Stream Deck — 3.0.0.0
 
-## Installation order
+## New Stream Deck actions
 
-1. Install the Navisworks ZIP while Navisworks is closed.
-2. Install the `.streamDeckPlugin` package.
-3. Start Navisworks before using the Stream Deck action.
+Select / Window, Item Move / Reset, Draw / Erase, Measure / Clear, Apply A.P. / Reset, Black Arrow, Line / String, Ellipse / Cloud, Clash Detective, Red Cloud, Red Ellipse, Red String, Red Line, Eraser, Blue Cloud, Blue Ellipse, Blue String, and Blue Line.
+
+All markup drawing actions set thickness to 6. Red, blue, and black actions also set their color before activating the tool. Short/long pairs use a 600 ms hold threshold.
+
+## Stability fixes
+
+- Uses Navisworks' supported command manager instead of its private framework interface.
+- Supports both execute and toggle command types, including Select Objects and Crossing Select.
+- Corrects the installer so an upgrade replaces the active bundle instead of creating a nested bundle.
 
 ## Compatibility
 
@@ -17,4 +23,4 @@
 - Autodesk Navisworks Manage 2027
 - Elgato Stream Deck 7.1 or later
 
-The Stream Deck action requires the companion Navisworks plug-in. Communication is restricted to IPv4 loopback TCP port 42727.
+The Stream Deck actions require the companion Navisworks plug-in. Communication is restricted to IPv4 loopback TCP port 42727.

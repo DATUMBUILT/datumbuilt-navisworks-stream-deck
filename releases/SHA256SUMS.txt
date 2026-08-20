@@ -1,2 +1,2 @@
-0e3949f9a3d0d7391dcfd7ba1b207c2f2f976abfc04c837f22aed47c5d03749d  DATUMBUILT-Navisworks-Clash-Tools-1.2.1.zip
-de065ab6534d177c765cd204b19953ed8f67de85c022954009444c9bd468673b  DATUMBUILT-Navisworks-Stream-Deck-2.0.2.streamDeckPlugin
+0bdf62c7dfe3b2d780aeae573a778cc73bf36aa9e0e340942214fb0af09a8daf  DATUMBUILT-Navisworks-Tools-1.3.2.zip
+1ebff32d4291b8e72e94fdbb2ce9ffba2c2ab529cdaca3e33fe7057af9e03142  DATUMBUILT-Navisworks-Stream-Deck-3.0.0.streamDeckPlugin

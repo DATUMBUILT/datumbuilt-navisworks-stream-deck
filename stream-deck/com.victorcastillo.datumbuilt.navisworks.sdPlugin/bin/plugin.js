@@ -9186,10 +9186,34 @@ function log(message) {
     try {
         appendFileSync(LOG_PATH, `${new Date().toISOString()} ${message}\n`);
     }
-    catch {
-        // Diagnostics must never prevent the action from running.
-    }
+    catch { }
 }
+function sendBridgeRequest(request) {
+    return new Promise((resolve) => {
+        let settled = false;
+        let response = "";
+        const socket = createConnection({ host: "127.0.0.1", port: BRIDGE_PORT }, () => socket.write(`${request}\n`));
+        const finish = (value) => {
+            if (settled)
+                return;
+            settled = true;
+            socket.destroy();
+            resolve(value);
+        };
+        socket.setEncoding("utf8");
+        socket.setTimeout(4000);
+        socket.on("data", (chunk) => {
+            response += chunk;
+            const newline = response.indexOf("\n");
+            if (newline >= 0)
+                finish(response.slice(0, newline).trim());
+        });
+        socket.once("timeout", () => finish("ERROR:TIMEOUT"));
+        socket.once("error", (error) => finish(`ERROR:${error.message}`));
+        socket.once("end", () => finish(response.trim() || "ERROR:NO_RESPONSE"));
+    });
+}
+
 let ToggleClashHideOtherAction = (() => {
     let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.toggle-clash-hide-other" })];
     let _classDescriptor;
@@ -9206,59 +9230,407 @@ let ToggleClashHideOtherAction = (() => {
             __runInitializers(_classThis, _classExtraInitializers);
         }
         async onKeyDown(ev) {
-            log("Key pressed.");
-            if (process.platform !== "win32") {
-                log(`Unsupported platform: ${process.platform}.`);
-                await ev.action.showAlert();
-                return;
-            }
-            const response = await toggleThroughNavisworks();
-            log(`Bridge response: ${response}`);
-            if (response === "OK") {
+            const response = await sendBridgeRequest("TOGGLE_CLASH_HIDE_OTHER");
+            log(`TOGGLE_CLASH_HIDE_OTHER: ${response}`);
+            if (response === "OK")
                 await ev.action.showOk();
-            }
-            else {
+            else
                 await ev.action.showAlert();
-            }
         }
     });
     return _classThis;
 })();
-function toggleThroughNavisworks() {
-    return new Promise((resolve) => {
-        let settled = false;
-        let response = "";
-        const finish = (value) => {
-            if (settled)
-                return;
-            settled = true;
-            socket.destroy();
-            resolve(value);
-        };
-        const socket = createConnection({ host: "127.0.0.1", port: BRIDGE_PORT }, () => {
-            socket.write("TOGGLE_CLASH_HIDE_OTHER\n");
-        });
-        socket.setEncoding("utf8");
-        socket.setTimeout(4000);
-        socket.on("data", (chunk) => {
-            response += chunk;
-            const newline = response.indexOf("\n");
-            if (newline >= 0)
-                finish(response.slice(0, newline).trim());
-        });
-        socket.once("timeout", () => finish("ERROR:TIMEOUT"));
-        socket.once("error", (error) => finish(`ERROR:${error.message}`));
-        socket.once("end", () => finish(response.trim() || "ERROR:NO_RESPONSE"));
-    });
+
+const LONG_PRESS_MS = 600;
+class NavisworksBridgeAction extends SingletonAction {
+    longRequest;
+    pressedAt = new Map();
+    async onKeyDown(ev) {
+        if (this.longRequest) {
+            this.pressedAt.set(ev.action.id, Date.now());
+            return;
+        }
+        await this.execute(ev, this.shortRequest);
+    }
+    async onKeyUp(ev) {
+        if (!this.longRequest)
+            return;
+        const started = this.pressedAt.get(ev.action.id) ?? Date.now();
+        this.pressedAt.delete(ev.action.id);
+        const request = Date.now() - started >= LONG_PRESS_MS ? this.longRequest : this.shortRequest;
+        await this.execute(ev, request);
+    }
+    async execute(ev, request) {
+        const response = await sendBridgeRequest(request);
+        log(`${request}: ${response}`);
+        if (response === "OK")
+            await ev.action.showOk();
+        else
+            await ev.action.showAlert();
+    }
 }
+let SelectWindowAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.select-window" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "SELECT_OBJECTS";
+        longRequest = "SELECT_BOX";
+    });
+    return _classThis;
+})();
+let ItemMoveResetAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.item-move-reset" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "ITEM_MOVE";
+        longRequest = "RESET_SELECTED_TRANSFORMS";
+    });
+    return _classThis;
+})();
+let DrawEraseAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.draw-erase" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "DRAW_FREEHAND";
+        longRequest = "ERASE_MARKUP";
+    });
+    return _classThis;
+})();
+let MeasureClearAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.measure-clear" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "MEASURE_POINT_TO_POINT";
+        longRequest = "CLEAR_MEASUREMENTS";
+    });
+    return _classThis;
+})();
+let AppearanceProfileResetAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.appearance-profile-reset" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "APPLY_APPEARANCE_PROFILE";
+        longRequest = "RESET_ALL_APPEARANCES";
+    });
+    return _classThis;
+})();
+let BlackArrowAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.black-arrow" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "BLACK_ARROW";
+    });
+    return _classThis;
+})();
+let LineStringAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.line-string" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "MARKUP_LINE";
+        longRequest = "MARKUP_STRING";
+    });
+    return _classThis;
+})();
+let EllipseCloudAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.ellipse-cloud" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "MARKUP_ELLIPSE";
+        longRequest = "MARKUP_CLOUD";
+    });
+    return _classThis;
+})();
+let ClashDetectiveAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.clash-detective" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "CLASH_DETECTIVE";
+    });
+    return _classThis;
+})();
+let RedCloudAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.red-cloud" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "RED_CLOUD";
+    });
+    return _classThis;
+})();
+let RedEllipseAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.red-ellipse" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "RED_ELLIPSE";
+    });
+    return _classThis;
+})();
+let RedStringAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.red-string" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "RED_STRING";
+    });
+    return _classThis;
+})();
+let RedLineAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.red-line" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "RED_LINE";
+    });
+    return _classThis;
+})();
+let EraserAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.eraser" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "ERASE_MARKUP";
+    });
+    return _classThis;
+})();
+let BlueCloudAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.blue-cloud" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "BLUE_CLOUD";
+    });
+    return _classThis;
+})();
+let BlueEllipseAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.blue-ellipse" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "BLUE_ELLIPSE";
+    });
+    return _classThis;
+})();
+let BlueStringAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.blue-string" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "BLUE_STRING";
+    });
+    return _classThis;
+})();
+let BlueLineAction = (() => {
+    let _classDecorators = [action({ UUID: "com.victorcastillo.datumbuilt.navisworks.blue-line" })];
+    let _classDescriptor;
+    let _classExtraInitializers = [];
+    let _classThis;
+    let _classSuper = NavisworksBridgeAction;
+    (class extends _classSuper {
+        static { _classThis = this; }
+        static {
+            const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
+            __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
+            _classThis = _classDescriptor.value;
+            if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+            __runInitializers(_classThis, _classExtraInitializers);
+        }
+        shortRequest = "BLUE_LINE";
+    });
+    return _classThis;
+})();
 
 try {
     appendFileSync(join(tmpdir(), "DATUMBUILT-StreamDeck.log"), `${new Date().toISOString()} Plug-in started.\n`);
 }
-catch {
-    // Startup diagnostics must not prevent registration.
-}
+catch { }
 streamDeck.logger.setLevel("info");
-streamDeck.actions.registerAction(new ToggleClashHideOtherAction());
+[
+    new ToggleClashHideOtherAction(), new SelectWindowAction(), new ItemMoveResetAction(),
+    new DrawEraseAction(), new MeasureClearAction(), new AppearanceProfileResetAction(),
+    new BlackArrowAction(), new LineStringAction(), new EllipseCloudAction(),
+    new ClashDetectiveAction(), new RedCloudAction(), new RedEllipseAction(),
+    new RedStringAction(), new RedLineAction(), new EraserAction(), new BlueCloudAction(),
+    new BlueEllipseAction(), new BlueStringAction(), new BlueLineAction()
+].forEach((pluginAction) => streamDeck.actions.registerAction(pluginAction));
 streamDeck.connect();
 //# sourceMappingURL=plugin.js.map
